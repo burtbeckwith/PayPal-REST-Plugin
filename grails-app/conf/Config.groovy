@@ -9,6 +9,7 @@ log4j = {
     //}
 	
 	trace  'com.trinary.paypal'
+	debug  'com.budjb.requestbuilder'
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -23,8 +24,6 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
-	
-	debug  'com.budjb.requestbuilder'
 }
 grails.views.default.codec="none" // none, html, base64
 grails.views.gsp.encoding="UTF-8"
