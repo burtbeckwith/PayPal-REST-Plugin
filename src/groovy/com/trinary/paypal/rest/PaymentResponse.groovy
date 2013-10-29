@@ -1,4 +1,4 @@
-package com.trinary.paypal.payment
+package com.trinary.paypal.rest
 
 import org.apache.log4j.Logger
 
@@ -7,6 +7,7 @@ import com.budjb.requestbuilder.httpexception.*
 import com.trinary.Convertable
 import com.trinary.paypal.*
 import com.trinary.paypal.oauth.*
+import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
 
 class PaymentResponse {

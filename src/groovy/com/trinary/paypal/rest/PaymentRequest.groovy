@@ -1,4 +1,4 @@
-package com.trinary.paypal.payment
+package com.trinary.paypal.rest
 
 import java.util.Map
 
@@ -6,9 +6,12 @@ import org.apache.log4j.Logger
 
 import com.budjb.requestbuilder.*
 import com.budjb.requestbuilder.httpexception.*
+
 import com.trinary.Convertable
 import com.trinary.paypal.*
+import com.trinary.paypal.error.*
 import com.trinary.paypal.oauth.*
+import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
 
 class PaymentRequest implements Convertable {
@@ -16,10 +19,23 @@ class PaymentRequest implements Convertable {
     protected Payer payer
     protected RedirectUrls redirectUrls
     protected ArrayList<Transaction> transactions = new ArrayList<Transaction>()
+	protected PayPalError errors = null
 
     protected static Logger log = Logger.getLogger(PaymentRequest.class)
 
     public PaymentRequest() {}
+	
+	public boolean isError() {
+		return errors != null
+	}
+	
+	public void setErrors(HashMap map) {
+		errors = PayPalError.createFromResponse(map)
+	}
+	
+	public PayPalError getErrors() {
+		return errors
+	}
 
     public PaymentRequest(Intent intent, Payer payer, ArrayList<Transaction> transactions, RedirectUrls redirectUrls) {
         this.intent = intent
@@ -48,6 +64,7 @@ class PaymentRequest implements Convertable {
 
         if (!accessToken) {
             log.error("Failed to create access token!")
+			setErrors([name: "AUTHENTICATION_FAILURE", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
             return null
         }
 
@@ -72,15 +89,19 @@ class PaymentRequest implements Convertable {
             return PaymentResponse.createFromResponse(json)
         } catch (HttpBadRequestException e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
         } catch (HttpUnauthorizedException e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
         } catch (HttpNotAcceptableException e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
         } catch (Exception e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
+			setErrors([name: "UNHANDLED_EXCEPTION", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
         }
-
-        return null
+		
+		return null
     }
 
     @Override

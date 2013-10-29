@@ -4,6 +4,8 @@ class OauthAccessToken {
     protected String value
     protected String type
     protected Date   expires
+	
+	public OauthAccessToken() {}
 
     public OauthAccessToken(String value, String type, Date expires) {
         this.value = value
