@@ -131,5 +131,13 @@ class TestService {
         ]))
 
         paymentResponse = paymentRequest.pay()
+		
+		if (!paymentResponse) {
+			log.error("An error occurred!")
+			log.error(paymentRequest.errors.name)
+			paymentRequest.errors.details.each { PayPalErrorDetail detail ->
+				log.error(detail)
+			}
+		}
     }
 }

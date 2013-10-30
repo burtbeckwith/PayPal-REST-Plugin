@@ -22,8 +22,6 @@ class PaymentRequest implements Convertable {
 	protected PayPalError errors = null
 
     protected static Logger log = Logger.getLogger(PaymentRequest.class)
-
-    public PaymentRequest() {}
 	
 	public boolean isError() {
 		return errors != null
@@ -36,6 +34,8 @@ class PaymentRequest implements Convertable {
 	public PayPalError getErrors() {
 		return errors
 	}
+
+	public PaymentRequest() {}
 
     public PaymentRequest(Intent intent, Payer payer, ArrayList<Transaction> transactions, RedirectUrls redirectUrls) {
         this.intent = intent
@@ -103,6 +103,52 @@ class PaymentRequest implements Convertable {
 		
 		return null
     }
+	
+	public PaymentResponse execute(String paymentId, String payerId) {
+		OauthAccessToken accessToken = OauthTokenFactory.generateAccessToken()
+		
+		if (!accessToken) {
+			log.error("Failed to create access token!")
+			return null
+		}
+
+		try {
+			Map json = new RequestBuilder().post {
+				uri = UriBuilder.build {
+					base = PayPalConfig.sandbox ? "https://api.sandbox.paypal.com/v1" : "https://api.paypal.com/v1"
+					path = ["payments", "payment", paymentId, "execute"]
+				}
+				accept = "application/json"
+				contentType = "application/json"
+				headers = [
+					"Authorization": "${accessToken}"
+				]
+				body = [
+					"payer_id": payerId
+				]
+				ignoreInvalidSSL = true
+				debug = true
+			}
+
+			log.info("Response: ${json}")
+
+			return PaymentResponse.createFromResponse(json)
+		} catch (HttpBadRequestException e) {
+			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
+		} catch (HttpUnauthorizedException e) {
+			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
+		} catch (HttpNotAcceptableException e) {
+			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			setErrors(e.getContent())
+		} catch (Exception e) {
+			log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
+			setErrors([name: "UNHANDLED_EXCEPTION", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
+		}
+
+		return null
+	}
 
     @Override
     public Map buildMap() {

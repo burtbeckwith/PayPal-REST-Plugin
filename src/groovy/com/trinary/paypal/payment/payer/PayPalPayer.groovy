@@ -6,7 +6,6 @@ import com.trinary.Convertable
 import com.trinary.paypal.payment.PaymentMethod
 
 class PayPalPayer extends Payer implements Convertable {
-    protected PayerInfo payerInfo
 
     public PayPalPayer() {
         paymentMethod = PaymentMethod.PAYPAL

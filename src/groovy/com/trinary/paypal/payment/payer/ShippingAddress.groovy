@@ -18,7 +18,6 @@ class ShippingAddress extends PayerAddress {
         this.type          = map["type"]
     }
 
-
     public Map buildMap() {
         return [
             line1: line1,
@@ -32,4 +31,14 @@ class ShippingAddress extends PayerAddress {
             type: type
         ].findAll {key, value -> value != null}
     }
+	
+	public String toString() {
+		return recipientName
+			line1 +
+			line2 +
+			"${city}, ${state} ${postalCode}" +
+			countryCode +
+			type +
+			phone
+	}
 }

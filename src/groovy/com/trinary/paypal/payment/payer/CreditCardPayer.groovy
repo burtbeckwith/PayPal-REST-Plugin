@@ -8,6 +8,7 @@ import com.trinary.paypal.payment.*
 
 class CreditCardPayer extends Payer {
     protected ArrayList<FundingInstrument> fundingInstruments = new ArrayList<FundingInstrument>()
+	protected PayerInfo payerInfo
 
     public CreditCardPayer() {
         paymentMethod = PaymentMethod.CREDIT_CARD

@@ -74,8 +74,32 @@ class PaymentResponse {
                     ]))
                 }
             }
-        } else if (responseMap["payer"]["paymentMethod"] == "paypal") {
-            paymentResponse.payer = new PayPalPayer()
+        } else if (responseMap["payer"]["payment_method"] == "paypal") {
+			Map payerInfo = responseMap["payer"]["payer_info"]
+			Map shipping  = payerInfo["shipping_address"]
+			
+			println "PAYER INFO " + payerInfo
+			println "SHIPPING   " + shipping
+			
+            paymentResponse.payer = new PayPalPayer(
+				payerInfo: new PayerInfo([
+					email: payerInfo["email"],
+					firstName: payerInfo["first_name"],
+					lastName: payerInfo["last_name"],
+					payer_id: payerInfo["payer_id"],
+					shippingAddress: new ShippingAddress([
+						line1: shipping["line1"],
+						line2: shipping["line2"],
+						city: shipping["city"],
+						state: shipping["state"],
+						postalCode: shipping["postal_code"],
+						countryCode: shipping["country_code"],
+						phone: shipping["phone"],
+						recipientName: shipping["recipient_name"],
+						type: shipping["type"] ? PayerAddressType.valueOf(shipping["type"]?.toUpperCase()) : null
+					])
+				])
+			)
         }
 
         // Convert transactions object back to pogo
@@ -97,47 +121,5 @@ class PaymentResponse {
         }
 
         return paymentResponse
-    }
-
-    public PaymentResponse execute(String payerId) {
-        OauthAccessToken accessToken = OauthTokenFactory.generateAccessToken()
-
-        if (!accessToken) {
-            log.error("Failed to create access token!")
-            return null
-        }
-
-        try {
-            Map json = new RequestBuilder().post {
-                uri = UriBuilder.build {
-                    base = PayPalConfig.sandbox ? "https://api.sandbox.paypal.com/v1" : "https://api.paypal.com/v1"
-                    path = ["payments", "payment", id, "execute"]
-                }
-                accept = "application/json"
-                contentType = "application/json"
-                headers = [
-                    "Authorization": "${accessToken}"
-                ]
-                body = [
-                    "payer_id": payerId
-                ]
-                ignoreInvalidSSL = true
-                debug = true
-            }
-
-            log.info("Response: ${json}")
-
-            return PaymentResponse.createFromResponse(json)
-        } catch (HttpBadRequestException e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-        } catch (HttpUnauthorizedException e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-        } catch (HttpNotAcceptableException e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-        } catch (Exception e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
-        }
-
-        return null
     }
 }
