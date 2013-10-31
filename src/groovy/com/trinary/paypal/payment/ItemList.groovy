@@ -32,7 +32,7 @@ class ItemList implements Convertable {
             items: items.collect { Item item ->
                 item?.buildMap()
             },
-            shipping_address: shippingAddress.buildMap()
+            shipping_address: shippingAddress?.buildMap()
         ].findAll {key, value -> value != null}
     }
 }
