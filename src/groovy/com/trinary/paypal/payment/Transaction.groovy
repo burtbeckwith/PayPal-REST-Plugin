@@ -18,6 +18,11 @@ class Transaction implements Convertable {
         this.description = description
         this.relatedResources = relatedResources
     }
+	
+	public void addItem(Item item) {
+		itemList.addItem(item)
+		amount.setSubtotal(itemList.getTotal())
+	}
 
     public Transaction(Map map) {
         this.amount = map["amount"]

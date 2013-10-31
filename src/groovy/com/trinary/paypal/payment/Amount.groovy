@@ -11,7 +11,7 @@ class Amount implements Convertable {
 
     public Amount() {}
 
-    public Amount(Currency currency, double total, Details details) {
+    public Amount(Currency currency, Double total, Details details) {
         this.currency = currency
         this.total = total
         this.details = details
@@ -22,6 +22,18 @@ class Amount implements Convertable {
         this.total = map["total"]
         this.details = map["details"]
     }
+	
+	public Details getDetails() {
+		return details
+	}
+	
+	public void setTotal(Double total) {
+		this.total = total
+	}
+	
+	public void setSubtotal(Double subtotal) {
+		details.setSubtotal(subtotal)
+	}
 
     @Override
     public Map buildMap() {

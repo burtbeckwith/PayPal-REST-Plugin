@@ -9,6 +9,38 @@ class Details implements Convertable {
     protected Double subtotal
     protected Double tax
     protected Double fee
+	
+	public Details() {}
+	
+	public Details(Double shipping, Double subtotal, Double tax, Double fee) {
+		this.shipping = shipping
+		this.subtotal = subtotal
+		this.tax = tax
+		this.fee = fee
+	}
+
+	public Details(Map map) {
+		this.shipping = map["shipping"]
+		this.subtotal = map["subtotal"]
+		this.tax = map["tax"]
+		this.fee = map["fee"]
+	}
+		
+	protected void setShipping(Double shipping) {
+		this.shipping = shipping
+	}
+	
+	protected void setSubtotal(Double subTotal) {
+		this.subtotal = subtotal
+	}
+	
+	protected void setTax(Double tax) {
+		this.tax = tax
+	}
+	
+	protected void setFee(Double fee) {
+		this.fee = fee
+	}
 
     @Override
     public Map buildMap() {

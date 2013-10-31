@@ -12,6 +12,13 @@ class ItemList implements Convertable {
     public void addItem(Item item) {
         items.add(item)
     }
+	
+	public double getTotal() {
+		double total = 0.0;
+		items.each { Item item ->
+			total += item.price
+		}
+	}
 
     @Override
     public Map buildMap() {

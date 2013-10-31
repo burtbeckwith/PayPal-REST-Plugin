@@ -8,7 +8,26 @@ class Item implements Convertable {
     protected Integer quantity
     protected String name
     protected Double price
+	protected Currency currency
     protected String sku
+	
+	public Item() {}
+	
+	public Item(Integer quantity, String name, Double price, Currency currency, String sku) {
+		this.quantity = quantity
+		this.name = name
+		this.price = price
+		this.sku = sku
+		this.currency = currency
+	}
+	
+	public Item(Map map) {
+		this.quantity = map["quantity"]
+		this.name = map["name"]
+		this.price = map["price"]
+		this.sku = map["sku"]
+		this.currency = map["currency"]
+	}
 
     @Override
     public Map buildMap() {
@@ -16,7 +35,8 @@ class Item implements Convertable {
             quantity: quantity,
             name: name,
             price: String.format('%.2f', price),
-            sku: sku
+            sku: sku,
+			currency: currency.toString()
         ].findAll {key, value -> value != null}
     }
 }
