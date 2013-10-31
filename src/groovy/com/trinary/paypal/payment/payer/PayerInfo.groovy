@@ -24,12 +24,12 @@ class PayerInfo implements Convertable {
     }
 
     public PayerInfo(Map map) {
-        this.email = map["email"]
-        this.firstName = map["firstName"]
-        this.lastName = map["lastName"]
-        this.payerId = map["payerId"]
-        this.phone = map["phone"]
-        this.shippingAddress = map["shippingAddress"]
+        this.email = map["email"] ?: email
+        this.firstName = map["firstName"] ?: firstName
+        this.lastName = map["lastName"] ?: lastName
+        this.payerId = map["payerId"] ?: payerId
+        this.phone = map["phone"] ?: phone
+        this.shippingAddress = map["shippingAddress"] ?: shippingAddress
     }
 
     @Override
@@ -40,7 +40,7 @@ class PayerInfo implements Convertable {
             last_name: lastName,
             payer_id: payerId,
             phone: phone,
-            shipping_address: shippingAddress.buildMap()
+            shipping_address: shippingAddress?.buildMap()
         ].findAll {key, value -> value != null}
     }
 }

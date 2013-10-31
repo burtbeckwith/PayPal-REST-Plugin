@@ -16,7 +16,7 @@ class CreditCardToken extends FundingInstrument implements Convertable {
 
     public CreditCardToken(Map map) {
         super(map)
-        this.last4 = map["last4"]
+        this.last4 = map["last4"] ?: last4
     }
 
     @Override

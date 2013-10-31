@@ -22,11 +22,11 @@ class Item implements Convertable {
 	}
 	
 	public Item(Map map) {
-		this.quantity = map["quantity"]
-		this.name = map["name"]
-		this.price = map["price"]
-		this.sku = map["sku"]
-		this.currency = map["currency"]
+		this.quantity = map["quantity"] ?: quantity
+		this.name = map["name"] ?: name
+		this.price = map["price"] ?: price
+		this.sku = map["sku"] ?: sku
+		this.currency = map["currency"] ?: currency
 	}
 
     @Override

@@ -16,8 +16,8 @@ class RedirectUrls implements Convertable {
     }
 
     public RedirectUrls(Map map) {
-        this.returnUrl = map["returnUrl"]
-        this.cancelUrl = map["cancelUrl"]
+        this.returnUrl = map["returnUrl"] ?: returnUrl
+        this.cancelUrl = map["cancelUrl"] ?: cancelUrl
     }
 
     @Override

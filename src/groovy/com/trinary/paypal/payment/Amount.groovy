@@ -7,7 +7,7 @@ import com.trinary.Convertable
 class Amount implements Convertable {
     protected Currency currency
     protected Double total
-    protected Details details
+    protected Details details = new Details()
 
     public Amount() {}
 
@@ -18,9 +18,9 @@ class Amount implements Convertable {
     }
 
     public Amount(Map map) {
-        this.currency = map["currency"]
-        this.total = map["total"]
-        this.details = map["details"]
+        this.currency = map["currency"] ?: currency
+        this.total = map["total"] ?: total
+        this.details = map["details"] ?: details
     }
 	
 	public Details getDetails() {
@@ -34,6 +34,10 @@ class Amount implements Convertable {
 	public void setSubtotal(Double subtotal) {
 		details.setSubtotal(subtotal)
 	}
+	
+	public Double getTotal() {
+		return total
+	}
 
     @Override
     public Map buildMap() {
@@ -42,7 +46,7 @@ class Amount implements Convertable {
         return [
             currency: currency.toString(),
             total: String.format('%.2f', total),
-            details: details.buildMap()
+            details: details?.buildMap()
         ].findAll {key, value -> value != null}
     }
 }

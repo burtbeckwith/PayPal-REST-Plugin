@@ -12,8 +12,8 @@ class PayPalErrorDetail {
 	}
 	
 	public PayPalErrorDetail(Map detailMap) {
-		this.field = detailMap["field"]
-		this.issue = detailMap["issue"]
+		this.field = detailMap["field"] ?: field
+		this.issue = detailMap["issue"] ?: issue
 	}
 	
 	public String getField() {

@@ -25,11 +25,11 @@ class CreditCard extends FundingInstrument implements Convertable {
 
     public CreditCard(Map map) {
         super(map)
-        this.number = map["number"]
-        this.cvv2 = map["cvv2"]
-        this.firstName = map["firstName"]
-        this.lastName = map["lastName"]
-        this.billingAddress = map["billingAddress"]
+        this.number = map["number"] ?: number
+        this.cvv2 = map["cvv2"] ?: cvv2
+        this.firstName = map["firstName"] ?: firstName
+        this.lastName = map["lastName"] ?: lastName
+        this.billingAddress = map["billingAddress"] ?: billingAddress
     }
 
     @Override
@@ -45,7 +45,7 @@ class CreditCard extends FundingInstrument implements Convertable {
                 cvv2: cvv2,
                 first_name: firstName,
                 last_name: lastName,
-                billing_address: billingAddress.buildMap()
+                billing_address: billingAddress?.buildMap()
             ]
         ].findAll {key, value -> value != null}
     }

@@ -25,16 +25,16 @@ class Transaction implements Convertable {
 	}
 
     public Transaction(Map map) {
-        this.amount = map["amount"]
-        this.itemList = map["itemList"]
-        this.description = map["description"]
-        this.relatedResources = map["relatedResources"]
+        this.amount = map["amount"] ?: amount
+        this.itemList = map["itemList"] ?: itemList
+        this.description = map["description"] ?: description
+        this.relatedResources = map["relatedResources"] ?: relatedResources
     }
 
     @Override
     public Map buildMap() {
         return [
-            amount: amount.buildMap(),
+            amount: amount?.buildMap(),
             description: description,
             item_list: itemList?.buildMap()
         ].findAll {key, value -> value != null}

@@ -14,8 +14,8 @@ class ShippingAddress extends PayerAddress {
 
     public ShippingAddress(Map map) {
         super(map)
-        this.recipientName = map["recipientName"]
-        this.type          = map["type"]
+        this.recipientName = map["recipientName"] ?: recipientName
+        this.type          = map["type"] ?: type
     }
 
     public Map buildMap() {

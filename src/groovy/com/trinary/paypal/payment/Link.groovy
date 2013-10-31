@@ -12,8 +12,8 @@ class Link {
     }
 
     public Link(Map map) {
-        this.href   = map["href"]
-        this.rel    = map["rel"]
-        this.method = map["method"]
+        this.href   = map["href"] ?: href
+        this.rel    = map["rel"] ?: rel
+        this.method = map["method"] ?: method
     }
 }

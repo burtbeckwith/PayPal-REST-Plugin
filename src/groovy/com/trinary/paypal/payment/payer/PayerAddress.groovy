@@ -26,12 +26,12 @@ abstract class PayerAddress implements Convertable {
     }
 
     public PayerAddress(Map map) {
-        this.line1       = map["line1"]
-        this.line2       = map["line2"]
-        this.city        = map["city"]
-        this.countryCode = map["countryCode"]
-        this.postalCode  = map["postalCode"]
-        this.state       = map["state"]
-        this.phone       = map["phone"]
+        this.line1       = map["line1"] ?: line1
+        this.line2       = map["line2"] ?: line2
+        this.city        = map["city"] ?: city
+        this.countryCode = map["countryCode"] ?: countryCode
+        this.postalCode  = map["postalCode"] ?: postalCode
+        this.state       = map["state"] ?: state
+        this.phone       = map["phone"] ?: phone
     }
 }

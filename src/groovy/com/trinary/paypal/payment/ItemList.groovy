@@ -13,6 +13,10 @@ class ItemList implements Convertable {
         items.add(item)
     }
 	
+	public void setShippingAddress(ShippingAddress shippingAddress) {
+		this.shippingAddress = shippingAddress
+	}
+	
 	public Double getTotal() {
 		double total = 0.0;
 		items.each { Item item ->
@@ -26,7 +30,7 @@ class ItemList implements Convertable {
     public Map buildMap() {
         return [
             items: items.collect { Item item ->
-                item.buildMap()
+                item?.buildMap()
             },
             shipping_address: shippingAddress.buildMap()
         ].findAll {key, value -> value != null}

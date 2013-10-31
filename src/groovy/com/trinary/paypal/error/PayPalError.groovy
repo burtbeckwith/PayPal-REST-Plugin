@@ -19,13 +19,13 @@ class PayPalError {
 	
 	public static PayPalError createFromResponse(Map errorMap) {
 		PayPalError error = new PayPalError()
-		error.name = errorMap["name"]
+		error.name = errorMap["name"] ?: error.name
 		errorMap["details"].each {
 			error.details.add(new PayPalErrorDetail(it))
 		}
-		error.message = errorMap["message"]
-		error.informationLink = errorMap["information_link"]
-		error.debugId = errorMap["debugId"]
+		error.message = errorMap["message"] ?: error.message
+		error.informationLink = errorMap["information_link"] ?: error.informationLink
+		error.debugId = errorMap["debugId"] ?: error.debugId
 		
 		return error
 	}

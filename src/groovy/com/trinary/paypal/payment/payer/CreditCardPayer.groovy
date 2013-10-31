@@ -23,7 +23,7 @@ class CreditCardPayer extends Payer {
         return [
             payment_method: paymentMethod.toString(),
             funding_instruments: fundingInstruments.collect { FundingInstrument fundingInstrument ->
-                fundingInstrument.buildMap()
+                fundingInstrument?.buildMap()
             }
         ].findAll {key, value -> value != null}
     }

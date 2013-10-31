@@ -5,10 +5,10 @@ import java.util.Map;
 import com.trinary.Convertable
 
 class Details implements Convertable {
-    protected Double shipping
-    protected Double subtotal
-    protected Double tax
-    protected Double fee
+    protected Double shipping = 0.0
+    protected Double subtotal = 0.0
+    protected Double tax = 0.0
+    protected Double fee = 0.0
 	
 	public Details() {}
 	
@@ -20,28 +20,44 @@ class Details implements Convertable {
 	}
 
 	public Details(Map map) {
-		this.shipping = map["shipping"]
-		this.subtotal = map["subtotal"]
-		this.tax = map["tax"]
-		this.fee = map["fee"]
+		this.shipping = map["shipping"] ?: shipping
+		this.subtotal = map["subtotal"] ?: subtotal
+		this.tax = map["tax"] ?: tax
+		this.fee = map["fee"] ?: fee
 	}
 		
-	protected void setShipping(Double shipping) {
+	public void setShipping(Double shipping) {
 		this.shipping = shipping
 	}
 	
-	protected void setSubtotal(Double subTotal) {
+	public void setSubtotal(Double subtotal) {
 		this.subtotal = subtotal
 	}
 	
-	protected void setTax(Double tax) {
+	public void setTax(Double tax) {
 		this.tax = tax
 	}
 	
-	protected void setFee(Double fee) {
+	public void setFee(Double fee) {
 		this.fee = fee
 	}
-
+	
+	public Double getShipping() {
+		return shipping
+	}
+	
+	public Double getSubtotal() {
+		return subtotal
+	}
+	
+	public Double getTax() {
+		return tax
+	}
+	
+	public Double getFee() {
+		return fee
+	}
+	
     @Override
     public Map buildMap() {
         return [

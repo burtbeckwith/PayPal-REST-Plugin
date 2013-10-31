@@ -22,10 +22,10 @@ abstract class FundingInstrument implements Convertable {
     }
 
     public FundingInstrument(Map map) {
-        this.id = map["id"]
-        this.payerId = map["payerId"]
-        this.type = map["type"]
-        this.expireMonth = map["expireMonth"]
-        this.expireYear = map["expireYear"]
+        this.id = map["id"] ?: id
+        this.payerId = map["payerId"] ?: payerId
+        this.type = map["type"] ?: type
+        this.expireMonth = map["expireMonth"] ?: expireMonth
+        this.expireYear = map["expireYear"] ?: expireYear
     }
 }
