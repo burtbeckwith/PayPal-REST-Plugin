@@ -5,9 +5,9 @@ import java.util.Map
 import com.trinary.Convertable
 
 class Transaction implements Convertable {
-    protected Amount amount
+    protected Amount amount = new Amount()
     protected String description
-    protected ItemList itemList
+    protected ItemList itemList = new ItemList()
     protected Map relatedResources = [:]
 
     public Transaction() {}
