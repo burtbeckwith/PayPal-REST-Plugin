@@ -13,11 +13,13 @@ class ItemList implements Convertable {
         items.add(item)
     }
 	
-	public double getTotal() {
+	public Double getTotal() {
 		double total = 0.0;
 		items.each { Item item ->
 			total += item.price
 		}
+		
+		return total
 	}
 
     @Override
