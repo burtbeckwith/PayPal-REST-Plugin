@@ -10,6 +10,8 @@ class Details implements Convertable {
     protected Double tax = 0.0
     protected Double fee = 0.0
 	
+	protected Double taxRate = null
+	
 	public Details() {}
 	
 	public Details(Double shipping, Double subtotal, Double tax, Double fee) {
@@ -42,6 +44,10 @@ class Details implements Convertable {
 		this.fee = fee
 	}
 	
+	public void setTaxRate(Double taxRate) {
+		this.taxRate = taxRate
+	}
+	
 	public Double getShipping() {
 		return shipping
 	}
@@ -51,11 +57,15 @@ class Details implements Convertable {
 	}
 	
 	public Double getTax() {
-		return tax
+		return taxRate ? taxRate * subtotal : tax
 	}
 	
 	public Double getFee() {
 		return fee
+	}
+	
+	public Double getTaxRate() {
+		return taxRate
 	}
 	
     @Override

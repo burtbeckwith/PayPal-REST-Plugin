@@ -36,16 +36,14 @@ class Amount implements Convertable {
 	}
 	
 	public Double getTotal() {
-		return total
+		return total ?: ((details.subtotal ?: 0.0) + (details.tax ?: 0.0) + (details.fee ?: 0.0) + (details.shipping ?: 0.0))
 	}
 
     @Override
     public Map buildMap() {
-        Double total = this.total ?: ((details.subtotal ?: 0.0) + (details.tax ?: 0.0) + (details.fee ?: 0.0) + (details.shipping ?: 0.0))
-
         return [
             currency: currency.toString(),
-            total: String.format('%.2f', total),
+            total: String.format('%.2f', getTotal()),
             details: details?.buildMap()
         ].findAll {key, value -> value != null}
     }

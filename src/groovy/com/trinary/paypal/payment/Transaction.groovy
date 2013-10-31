@@ -19,17 +19,22 @@ class Transaction implements Convertable {
         this.relatedResources = relatedResources
     }
 	
+	public Transaction(Map map) {
+		this.amount = map["amount"] ?: amount
+		this.itemList = map["itemList"] ?: itemList
+		this.description = map["description"] ?: description
+		this.relatedResources = map["relatedResources"] ?: relatedResources
+		setTaxRate(map["taxRate"])
+	}
+	
 	public void addItem(Item item) {
 		itemList.addItem(item)
 		amount.setSubtotal(itemList.getTotal())
 	}
-
-    public Transaction(Map map) {
-        this.amount = map["amount"] ?: amount
-        this.itemList = map["itemList"] ?: itemList
-        this.description = map["description"] ?: description
-        this.relatedResources = map["relatedResources"] ?: relatedResources
-    }
+	
+	public void setTaxRate(Double taxRate) {
+		amount.details.setTaxRate(taxRate)
+	}
 
     @Override
     public Map buildMap() {

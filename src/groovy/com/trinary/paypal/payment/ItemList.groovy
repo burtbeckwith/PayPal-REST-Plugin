@@ -20,7 +20,7 @@ class ItemList implements Convertable {
 	public Double getTotal() {
 		double total = 0.0;
 		items.each { Item item ->
-			total += item.price
+			total += item.price * item.quantity
 		}
 		
 		return total
