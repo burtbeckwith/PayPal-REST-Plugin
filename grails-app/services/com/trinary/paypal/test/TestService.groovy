@@ -10,23 +10,25 @@ class TestService {
 	PaymentService paymentService
 
     def test() {
+		// Configure the PayPal plugin.  This can also be done in the Grails config.
         PayPalConfig.setClientId("ASH4ehCXBQFejoWM4-VhA1m3OveRc6Gx0Wf2fRJSTw_kc70s5CDccdnyjBaU")
 		PayPalConfig.setSecret("EE13ZxA47-hbtRI7nuzdaXy407gUJtbSyCCBM4LYnJdlbFFkwW1XSPxBTUve")
 		PayPalConfig.enableSandbox()
 		
+		// Create an object that uses the Payable interface.
 		Order order = new Order(
 			currency: Currency.USD,
 			taxRate: 0.0825
 		)
 		
+		// Add items with price, description, quantity.
 		order.items.add(new OrderItem(
-			currency: Currency.USD,
-			taxRate: 0.0825,
 			price: 25.00,
-			description: "Silk Pink Panties",
+			description: "Kaito Action Figure",
 			quantity: 2
 		))
 		
+		// Create a credit card object.
 		CreditCard creditCard = new CreditCard(
 			firstName: "Hatsune",
 			lastName: "Miku",
@@ -45,6 +47,7 @@ class TestService {
 			)
 		)
 		
+		// To pay with a credit card, pass the order and the credit card object.
 		try {
 			paymentService.payWithCreditCard(order, creditCard)
 		} catch (PayPalException e) {
@@ -53,6 +56,7 @@ class TestService {
 			log.error("Payment declined!", e)
 		}
 		
+		// To pay with Pay Pal, pass the order and two urls.
 		try {
 			paymentService.payWithPayPal(order, "http://localhost/completePayPal", "http://localhost/cancelPayPal")
 		} catch (PayPalException e) {

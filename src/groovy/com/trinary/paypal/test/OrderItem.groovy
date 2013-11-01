@@ -5,11 +5,11 @@ import com.trinary.paypal.payment.*
 
 
 class OrderItem implements Payable {
-	String description
-	Double price
-	Double taxRate
-	Integer quantity
-	Currency currency
+	protected String description
+	protected Double price
+	protected Double taxRate
+	protected Integer quantity
+	protected Currency currency
 
 	@Override
 	public Double getPrice() {
@@ -40,11 +40,19 @@ class OrderItem implements Payable {
 	public String getPaymentId() {
 		return null
 	}
+	
+	@Override
+	public String getTransactionId() {
+		return null
+	}
 
 	@Override
 	public void setPaymentId(String paymentId) {
 		this.paymentId = paymentId		
 	}
+	
+	@Override
+	public void setTransactionId(String transactionId) {}
 
 	@Override
 	public ArrayList<Payable> getItems() {
