@@ -1,1 +1,1 @@
-WIP
+The PayPal REST Plugin simplifies and enumerates the PayPal REST API and it's many objects.  It uses Bud Byrd's brilliant Jersey Request Builder to build all HTTP REST requests to the PayPal services.
