@@ -6,6 +6,8 @@ import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
 
 class PaymentService {
+	def grailsLinkGenerator
+	
     PaymentResponse payWithCreditCard(Payable order, CreditCard creditCard) throws PayPalException, PayPalPaymentDeclinedException {
 		Double taxRate = order.getTaxRate()
 		
@@ -53,7 +55,12 @@ class PaymentService {
 		return paymentResponse
     }
 	
-	PaymentResponse payWithPayPal(Payable order, String returnUrl, String cancelUrl) throws PayPalException {
+	PaymentResponse payWithPayPal(Payable order, String controller, String completeAction, String cancelAction) throws PayPalException {
+		order.transactionId = UUID.randomUUID()
+		
+		String returnUrl = grailsLinkGenerator.link(absolute: true, controller: controller, action: completeAction, params: [transaction: order.transactionId])
+		String cancelUrl = grailsLinkGenerator.link(absolute: true, controller: controller, action: cancelAction)
+		
 		PaymentRequest paymentRequest = new PaymentRequest([
 			intent: Intent.SALE,
 			payer: new PayPalPayer(),
@@ -74,7 +81,7 @@ class PaymentService {
 			Double price = payable.price
 			Integer quantity = payable.quantity
 			String description = payable.description
-			Currency currency = payable.currency
+			Currency currency = order.currency
 			
 			transaction.addItem(new Item([
 				name: description,
@@ -90,6 +97,7 @@ class PaymentService {
 		
 		if (paymentResponse && paymentResponse.state == "created") {
 			order.paymentId = paymentResponse.id
+			PayPalTransactionStore.storeTransaction(order)
 		} else if (paymentResponse && paymentResponse.state != "created") {
 			throw new PayPalException("Failed to create payment!", null)
 		} else {
@@ -99,9 +107,11 @@ class PaymentService {
 		return paymentResponse
 	}
 	
-	PaymentResponse executePayPalPayment(Payable order, String payerId) throws PayPalException {
+	PaymentResponse executePayPalPayment(String transactionId, String payerId) throws PayPalException {
+		Payable payable = PayPalTransactionStore.getTransaction(transactionId)
+		
 		PaymentRequest paymentRequest = new PaymentRequest()
-		PaymentResponse paymentResponse = paymentRequest.execute(order.paymentId, payerId)
+		PaymentResponse paymentResponse = paymentRequest.execute(payable.paymentId, payerId)
 		
 		if (!paymentResponse) {
 			throw new PayPalException("Execute PayPal payment failed!", paymentRequest.errors)

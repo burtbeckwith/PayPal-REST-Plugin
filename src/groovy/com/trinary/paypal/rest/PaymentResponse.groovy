@@ -24,6 +24,12 @@ class PaymentResponse {
     protected static Logger log = Logger.getLogger(PaymentResponse.class)
 
     public PaymentResponse() {}
+	
+	public String getApprovalLink() {
+		return links.find {Link link->
+			link.rel == "approval_url"
+		}?.href
+	}
 
     static public PaymentResponse createFromResponse(Map responseMap) {
         PaymentResponse paymentResponse = new PaymentResponse()
