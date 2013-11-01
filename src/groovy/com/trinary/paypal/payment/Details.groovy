@@ -57,7 +57,7 @@ class Details implements Convertable {
 	}
 	
 	public Double getTax() {
-		return taxRate ? taxRate * subtotal : tax
+		return taxRate ? (taxRate * subtotal) : (tax)
 	}
 	
 	public Double getFee() {
@@ -73,7 +73,7 @@ class Details implements Convertable {
         return [
             shipping: String.format('%.2f', shipping ?: 0.0),
             subtotal: String.format('%.2f', subtotal ?: 0.0),
-            tax: String.format('%.2f', tax ?: 0.0),
+            tax: String.format('%.2f', getTax() ?: 0.0),
             fee: String.format('%.2f', fee ?: 0.0)
         ].findAll {key, value -> value != null}
     }
