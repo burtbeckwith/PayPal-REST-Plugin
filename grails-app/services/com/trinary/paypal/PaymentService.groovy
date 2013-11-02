@@ -2,13 +2,14 @@ package com.trinary.paypal
 
 import com.trinary.paypal.rest.*
 import com.trinary.paypal.error.*
+import com.trinary.paypal.error.exception.PayPalException
 import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
 
 class PaymentService {
 	def grailsLinkGenerator
 	
-    PaymentResponse payWithCreditCard(Orderable order, CreditCard creditCard) throws PayPalException, PayPalPaymentDeclinedException {
+    PaymentResponse payWithCreditCard(Orderable order, CreditCard creditCard) throws PayPalException {
 		Double taxRate = order.getTaxRate()
 		
 		CreditCardPayer payer = new CreditCardPayer()
@@ -47,7 +48,7 @@ class PaymentService {
 		if (paymentResponse && paymentResponse.state == "approved") {
 			order.paymentId = paymentResponse.id
 		} else if (paymentResponse && paymentResponse.state != "approved") {
-			throw new PayPalPaymentDeclinedException("Payment was declined!")
+			throw new PayPalException("Payment was declined!")
 		} else {
 			throw new PayPalException("Pay by credit card failed!", paymentRequest.errors)
 		}
@@ -109,6 +110,10 @@ class PaymentService {
 	
 	PaymentResponse executePayPalPayment(String transactionId, String payerId) throws PayPalException {
 		Orderable orderable = PayPalTransactionStore.getTransaction(transactionId)
+		
+		if (!orderable) {
+			throw new PayPalException("Unable to find a transaction with id ${transactionId}", null)
+		}
 		
 		PaymentRequest paymentRequest = new PaymentRequest()
 		PaymentResponse paymentResponse = paymentRequest.execute(orderable.paymentId, payerId)

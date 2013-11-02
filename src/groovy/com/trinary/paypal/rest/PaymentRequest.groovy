@@ -10,6 +10,7 @@ import com.budjb.requestbuilder.httpexception.*
 import com.trinary.Convertable
 import com.trinary.paypal.*
 import com.trinary.paypal.error.*
+import com.trinary.paypal.error.exception.PayPalException
 import com.trinary.paypal.oauth.*
 import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
@@ -19,21 +20,8 @@ class PaymentRequest implements Convertable {
     protected Payer payer
     protected RedirectUrls redirectUrls
     protected ArrayList<Transaction> transactions = new ArrayList<Transaction>()
-	protected PayPalError errors = null
 
     protected static Logger log = Logger.getLogger(PaymentRequest.class)
-	
-	public boolean isError() {
-		return errors != null
-	}
-	
-	public void setErrors(HashMap map) {
-		errors = PayPalError.createFromResponse(map)
-	}
-	
-	public PayPalError getErrors() {
-		return errors
-	}
 
 	public PaymentRequest() {}
 
@@ -59,13 +47,12 @@ class PaymentRequest implements Convertable {
         this.intent = intent
     }
 
-    public PaymentResponse pay() {
+    public PaymentResponse pay() throws PayPalException {
         OauthAccessToken accessToken = OauthTokenFactory.generateAccessToken()
 
         if (!accessToken) {
             log.error("Failed to create access token!")
-			setErrors([name: "AUTHENTICATION_FAILURE", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
-            return null
+			throw new PayPalException("An error has occurred.  Please contact administrator.  Your card has not been charged.")
         }
 
         try {
@@ -87,18 +74,12 @@ class PaymentRequest implements Convertable {
             log.info("Response: ${json}")
 
             return PaymentResponse.createFromResponse(json)
-        } catch (HttpBadRequestException e) {
+        } catch (ResponseStatusException e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
-        } catch (HttpUnauthorizedException e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
-        } catch (HttpNotAcceptableException e) {
-            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
+			throw new PayPalException("Error running payment request.", new PayPalError(e.getContent()))
         } catch (Exception e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
-			setErrors([name: "UNHANDLED_EXCEPTION", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
+			throw new PayPalException("An error has occurred.  Please contact administrator.  Your card has not been charged.")
         }
 		
 		return null
@@ -133,19 +114,13 @@ class PaymentRequest implements Convertable {
 			log.info("Response: ${json}")
 
 			return PaymentResponse.createFromResponse(json)
-		} catch (HttpBadRequestException e) {
-			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
-		} catch (HttpUnauthorizedException e) {
-			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
-		} catch (HttpNotAcceptableException e) {
-			log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			setErrors(e.getContent())
-		} catch (Exception e) {
-			log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
-			setErrors([name: "UNHANDLED_EXCEPTION", message: "An error has occurred.  Please contact administrator.  Your card has not been charged."])
-		}
+		} catch (ResponseStatusException e) {
+            log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+			throw new PayPalException("Error running payment request.", new PayPalError(e.getContent()))
+        } catch (Exception e) {
+            log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
+			throw new PayPalException("An error has occurred.  Please contact administrator.  Your card has not been charged.")
+        }
 
 		return null
 	}

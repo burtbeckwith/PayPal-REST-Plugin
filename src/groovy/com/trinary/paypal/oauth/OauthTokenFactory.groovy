@@ -4,11 +4,11 @@ import org.apache.log4j.Logger
 
 import com.budjb.requestbuilder.RequestBuilder
 import com.budjb.requestbuilder.UriBuilder
-import com.budjb.requestbuilder.httpexception.HttpBadRequestException
-import com.budjb.requestbuilder.httpexception.HttpUnauthorizedException
-import com.budjb.requestbuilder.httpexception.HttpNotAcceptableException
+import com.budjb.requestbuilder.ResponseStatusException
 
 import com.trinary.paypal.*
+import com.trinary.paypal.error.*
+import com.trinary.paypal.error.exception.*
 
 class OauthTokenFactory {
     protected static OauthAccessToken oauthAccessToken = null
@@ -43,15 +43,13 @@ class OauthTokenFactory {
                 log.info("Response: ${json}")
 
                 oauthAccessToken = new OauthAccessToken(json["access_token"], json["token_type"], new Date((started + json["expires_in"]) * 1000))
-            } catch (HttpBadRequestException e) {
-                log.error("Error running oauth2 request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-            } catch (HttpUnauthorizedException e) {
-                log.error("Error running oauth2 request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-            } catch (HttpNotAcceptableException e) {
-                log.error("Error running oauth2 request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-            } catch (Exception e) {
-                log.error("Error running oauth2 request | ${e.getClass()} | ${e.getMessage()}", e)
-            }
+            } catch (ResponseStatusException e) {
+	            log.error("Error creating access token | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+				throw new PayPalException("Error creating access token.", new PayPalError(e.getContent()))
+	        } catch (Exception e) {
+	            log.error("Error creating access token | ${e.getClass()} | ${e.getMessage()}", e)
+				throw new PayPalException("Error creating access token.")
+	        }
         }
 
         return oauthAccessToken

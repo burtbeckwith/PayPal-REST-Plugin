@@ -2,6 +2,7 @@ package com.trinary.paypal.test
 
 import com.trinary.paypal.*
 import com.trinary.paypal.error.*
+import com.trinary.paypal.error.exception.*
 import com.trinary.paypal.rest.*
 import com.trinary.paypal.payment.*
 import com.trinary.paypal.payment.payer.*
@@ -33,6 +34,8 @@ class TestService {
 			return paymentService.payWithPayPal(order, "test", "completePayPal", "cancelPayPal")
 		} catch (PayPalException e) {
 			log.error("Payment failed!", e)
+		} catch (Exception e) {
+			log.error("Unexpected exception", e)
 		}
 	}
 	
@@ -79,8 +82,8 @@ class TestService {
 			return paymentService.payWithCreditCard(order, creditCard)
 		} catch (PayPalException e) {
 			log.error("Payment failed!", e)
-		} catch (PayPalPaymentDeclinedException e) {
-			log.error("Payment declined!", e)
+		} catch (Exception e) {
+			log.error("Unexpected exception", e)
 		}
     }
 }
