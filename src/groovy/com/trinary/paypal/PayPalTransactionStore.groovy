@@ -1,10 +1,10 @@
 package com.trinary.paypal
 
 class PayPalTransactionStore {
-	protected static ArrayList<Payable> transactions = new ArrayList<Payable>()
+	protected static ArrayList<Orderable> transactions = new ArrayList<Orderable>()
 	
-	public static Payable getTransaction(String transactionId) {
-		Payable found = transactions.find { Payable payable -> payable.transactionId == transactionId }
+	public static Orderable getTransaction(String transactionId) {
+		Orderable found = transactions.find { Orderable orderable -> orderable.transactionId == transactionId }
 		if (found) {
 			transactions.remove(found)
 		}
@@ -12,7 +12,7 @@ class PayPalTransactionStore {
 		return found
 	}
 	
-	public static void storeTransaction(Payable payable) {
-		transactions.add(payable)
+	public static void storeTransaction(Orderable orderable) {
+		transactions.add(orderable)
 	}
 }

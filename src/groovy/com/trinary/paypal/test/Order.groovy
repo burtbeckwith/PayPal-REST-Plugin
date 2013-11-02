@@ -3,7 +3,7 @@ package com.trinary.paypal.test
 import com.trinary.paypal.*
 import com.trinary.paypal.payment.*
 
-class Order implements Payable {
+class Order implements Orderable {
 	protected Currency currency
 	protected String description
 	protected String paymentId

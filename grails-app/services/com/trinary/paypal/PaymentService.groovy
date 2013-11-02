@@ -8,7 +8,7 @@ import com.trinary.paypal.payment.payer.*
 class PaymentService {
 	def grailsLinkGenerator
 	
-    PaymentResponse payWithCreditCard(Payable order, CreditCard creditCard) throws PayPalException, PayPalPaymentDeclinedException {
+    PaymentResponse payWithCreditCard(Orderable order, CreditCard creditCard) throws PayPalException, PayPalPaymentDeclinedException {
 		Double taxRate = order.getTaxRate()
 		
 		CreditCardPayer payer = new CreditCardPayer()
@@ -53,9 +53,9 @@ class PaymentService {
 		}
 		
 		return paymentResponse
-    }
+    }	
 	
-	PaymentResponse payWithPayPal(Payable order, String controller, String completeAction, String cancelAction) throws PayPalException {
+	PaymentResponse payWithPayPal(Orderable order, String controller, String completeAction, String cancelAction) throws PayPalException {
 		order.transactionId = UUID.randomUUID()
 		
 		String returnUrl = grailsLinkGenerator.link(absolute: true, controller: controller, action: completeAction, params: [transaction: order.transactionId])
@@ -108,10 +108,10 @@ class PaymentService {
 	}
 	
 	PaymentResponse executePayPalPayment(String transactionId, String payerId) throws PayPalException {
-		Payable payable = PayPalTransactionStore.getTransaction(transactionId)
+		Orderable orderable = PayPalTransactionStore.getTransaction(transactionId)
 		
 		PaymentRequest paymentRequest = new PaymentRequest()
-		PaymentResponse paymentResponse = paymentRequest.execute(payable.paymentId, payerId)
+		PaymentResponse paymentResponse = paymentRequest.execute(orderable.paymentId, payerId)
 		
 		if (!paymentResponse) {
 			throw new PayPalException("Execute PayPal payment failed!", paymentRequest.errors)
