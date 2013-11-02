@@ -49,8 +49,6 @@ class PaymentService {
 			order.paymentId = paymentResponse.id
 		} else if (paymentResponse && paymentResponse.state != "approved") {
 			throw new PayPalException("Payment was declined!")
-		} else {
-			throw new PayPalException("Pay by credit card failed!", paymentRequest.errors)
 		}
 		
 		return paymentResponse
@@ -100,9 +98,7 @@ class PaymentService {
 			order.paymentId = paymentResponse.id
 			PayPalTransactionStore.storeTransaction(order)
 		} else if (paymentResponse && paymentResponse.state != "created") {
-			throw new PayPalException("Failed to create payment!", null)
-		} else {
-			throw new PayPalException("Pay by PayPal failed!", paymentRequest.errors)
+			throw new PayPalException("Failed to create payment!")
 		}
 		
 		return paymentResponse
@@ -112,15 +108,11 @@ class PaymentService {
 		Orderable orderable = PayPalTransactionStore.getTransaction(transactionId)
 		
 		if (!orderable) {
-			throw new PayPalException("Unable to find a transaction with id ${transactionId}", null)
+			throw new PayPalException("Unable to find a transaction with id ${transactionId}")
 		}
 		
 		PaymentRequest paymentRequest = new PaymentRequest()
 		PaymentResponse paymentResponse = paymentRequest.execute(orderable.paymentId, payerId)
-		
-		if (!paymentResponse) {
-			throw new PayPalException("Execute PayPal payment failed!", paymentRequest.errors)
-		}
 
 		return paymentResponse
 	}
