@@ -1,1 +1,78 @@
-WIP
+First let's discuss how a PayPal payment works.  There are two steps.  The first is the creation of a payment.  A payment is composed of a list of transactions and a payer with a list of funding instruments.  With a PayPal transaction this is simplified greatly, as we don't have to present a funding instrument, as PayPal is our funding instrument.  So all we have to pass it is our list of transactions.
+
+In our PaymentService we store all of our items in one transaction.  The transaction is abstracted into an interface called Orderable.  The items contained in the Orderable object are abstracted as Payable.  Your classes that represent your order and sale items can implement these interfaces. 
+
+Creating a payment is easy.  Simply create an instance of your order object that implements our Orderable interface and then populate it with your sale items that implement our Payable interface, and then pass it into the PaymentService as shown below.
+
+{code}
+import com.trinary.paypal.*
+import com.trinary.paypal.error.*
+import com.trinary.paypal.rest.*
+import com.trinary.paypal.payment.*
+import com.trinary.paypal.payment.payer.*
+
+class TestService {
+    PaymentService paymentService
+
+    def testPayPal() {
+        // Configure the PayPal plugin.  This can also be done in the Grails config.
+        PayPalConfig.setClientId("ASH4ehCXBQFejoWM4-VhA1m3OveRc6Gx0Wf2fRJSTw_kc70s5CDccdnyjBaU")
+        PayPalConfig.setSecret("EE13ZxA47-hbtRI7nuzdaXy407gUJtbSyCCBM4LYnJdlbFFkwW1XSPxBTUve")
+        PayPalConfig.enableSandbox()
+        
+        // Create an object that uses the Orderable interface.
+        Order order = new Order(
+            currency: Currency.USD,
+            taxRate: 0.0825
+        )
+        
+        // Add Payable items with price, description, quantity.
+        order.items.add(new OrderItem(
+            price: 25.00,
+            description: "Kaito Action Figure",
+            quantity: 2
+        ))
+        
+        // To pay with PayPal, pass the order, the name of the controller for the redirect and
+        // the actions for completing and canceling the payment.
+        try {
+            return paymentService.payWithPayPal(order, "test", "completePayPal", "cancelPayPal")
+        } catch (PayPalException e) {
+            log.error("Payment failed!", e)
+        }
+    }
+}
+{code}
+
+As you can see above, you must pass the PaymentService two redirect url's.  It stores these with your payment object on PayPal's servers and returns to these once the payment is completed or canceled.  The service will also return to you an redirect url you must redirect the user to, to complete their payment.
+
+See the controller below to see how this would be done in this example:
+
+{code}
+package com.trinary.paypal.test
+
+import com.trinary.paypal.PaymentService
+import com.trinary.paypal.rest.PaymentResponse
+
+class TestController {
+    TestService testService
+    PaymentService paymentService
+    
+    def testPayPal() {
+        PaymentResponse paymentResponse = testService.testPayPal()
+        redirect(url: paymentResponse.approvalLink)
+    }
+    
+    def cancelPayPal() {
+        
+    }
+    
+    def completePayPal() {
+        [paymentResponse: paymentService.executePayPalPayment(params.transaction, params.PayerID)]
+    }
+}
+{code}
+
+The PaymentResponse object will contain everything the PayPal server's returned back to you.  The approval link is the url you must redirect to in order to have the user complete the transaction.  Once they complete the transaction, they will be redirected back to the controller and action you specified in the arguments for the PaymentService.
+
+When the redirect from PayPal occurs, there will be a transaction id attached as a query param called "transaction", and a payer id as a query param called "PayerID" (PayPal doesn't like camel case for some reason).  To complete the transaction, simply call the PaymentService with these two arguments.

@@ -1,1 +1,24 @@
-WIP
+In order to configure the plugin you can either set the following in your conf/Config.groovy file:
+
+{code}
+grails.paypal.clientId = "CLIENT_ID"
+grails.paypal.secret   = "SECRET"
+grails.paypal.sandbox  = true
+{code}
+
+Or you can set it anywhere in your code:
+
+{code}
+import com.trinary.paypal.PayPalConfig
+
+class foo {
+
+    def method() {
+        PayPalConfig.setClientId("CLIENT_ID")
+        PayPalConfig.setSecret("SECRET")
+        PayPalConfig.setSandbox(true)
+        
+        ...
+    }
+}
+{code}

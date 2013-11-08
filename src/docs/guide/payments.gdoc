@@ -1,1 +1,1 @@
-WIP
+In the current version of this plugin, only basic credit card payments and basic PayPal payments are accepted.  We will get to authorizing and capturing authorized payments in the near future, as well as storing credit card data in PayPal's vault.  The following are examples of collecting payments.

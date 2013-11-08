@@ -5,28 +5,3 @@ The plugin consists of POGOs that represent all PayPal's data structures and one
 The Grails service at the center of the plugin abstracts away the building of the payment request object also.  Each POGO can still be used separately of the service, but using the service is recommended.  The service consists of three methods that allow you to create a PayPal payment, execute an already created PayPal payment, and execute a credit card payment.
 
 Last but not least, there are two static objects.  One that stores the clientId, secret, and mode (sandbox or live) for the PayPal operations.  The other stores Payable objects to facilitate temporary persistence during redirects to and from PayPal.
-
-In order to configure the plugin you can either set the following in your conf/Config.groovy file:
-
-{code}
-    grails.paypal.clientId = "CLIENT_ID"
-    grails.paypal.secret   = "SECRET"
-    grails.paypal.sandbox  = true
-{code}
-
-Or you can set it anywhere in your code:
-
-{code}
-import com.trinary.paypal.PayPalConfig
-
-class foo {
-
-    def method() {
-        PayPalConfig.setClientId("CLIENT_ID")
-        PayPalConfig.setSecret("SECRET")
-        PayPalConfig.setSandbox(true)
-        
-        ...
-    }
-}
-{code}
