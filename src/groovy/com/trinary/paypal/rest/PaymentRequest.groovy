@@ -76,7 +76,7 @@ class PaymentRequest implements Convertable {
             return PaymentResponse.createFromResponse(json)
         } catch (ResponseStatusException e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-			throw new PayPalException("Error running payment request.", new PayPalError(e.getContent()))
+			throw new PayPalException("Error running payment request.", PayPalError.createFromResponse(e.getContent()))
         } catch (Exception e) {
             log.error("Error running payment request | ${e.getClass()} | ${e.getMessage()}", e)
 			throw new PayPalException("An error has occurred.  Please contact administrator.  Your card has not been charged.")

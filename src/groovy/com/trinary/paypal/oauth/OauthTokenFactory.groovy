@@ -45,7 +45,7 @@ class OauthTokenFactory {
                 oauthAccessToken = new OauthAccessToken(json["access_token"], json["token_type"], new Date((started + json["expires_in"]) * 1000))
             } catch (ResponseStatusException e) {
 	            log.error("Error creating access token | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-				throw new PayPalException("Error creating access token.", new PayPalError(e.getContent()))
+				throw new PayPalException("Error creating access token.", PayPalError.createFromResponse(e.getContent()))
 	        } catch (Exception e) {
 	            log.error("Error creating access token | ${e.getClass()} | ${e.getMessage()}", e)
 				throw new PayPalException("Error creating access token.")
