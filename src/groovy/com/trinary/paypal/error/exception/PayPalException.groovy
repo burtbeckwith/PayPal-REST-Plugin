@@ -1,6 +1,6 @@
 package com.trinary.paypal.error.exception
 
-import com.trinary.paypal.error.PayPalError;
+import com.trinary.paypal.error.PayPalError
 
 class PayPalException extends Exception {
 	protected PayPalError map

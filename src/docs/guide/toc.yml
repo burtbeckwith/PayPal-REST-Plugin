@@ -10,9 +10,3 @@ payments:
                 title: Pay Pal Payments
         creditCard:
                 title: Credit Card Payments
-objects:
-        title: POGO Objects
-        paymentRequest:
-                title: Payment Request object
-        paymentResponse:
-                title: Payment Response object
