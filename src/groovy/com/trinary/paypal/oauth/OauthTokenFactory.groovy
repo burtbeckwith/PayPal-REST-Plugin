@@ -3,22 +3,21 @@ package com.trinary.paypal.oauth
 import org.apache.log4j.Logger
 
 import com.budjb.requestbuilder.RequestBuilder
-import com.budjb.requestbuilder.UriBuilder
 import com.budjb.requestbuilder.ResponseStatusException
-
-import com.trinary.paypal.*
-import com.trinary.paypal.error.*
-import com.trinary.paypal.error.exception.*
+import com.budjb.requestbuilder.UriBuilder
+import com.trinary.paypal.PayPalConfig
+import com.trinary.paypal.error.PayPalError
+import com.trinary.paypal.error.exception.PayPalException
 
 class OauthTokenFactory {
-    protected static OauthAccessToken oauthAccessToken = null
+    protected static OauthAccessToken oauthAccessToken
 
-    protected static Logger log = Logger.getLogger(OauthTokenFactory.class)
+    protected static Logger log = Logger.getLogger(this)
 
-    public static OauthAccessToken generateAccessToken() {
+    static OauthAccessToken generateAccessToken() {
         // Encode access token
         String oauth2Token = "${PayPalConfig.clientId}:${PayPalConfig.secret}".getBytes().encodeBase64()
-        long started = new Date().getTime()
+        long started = System.currentTimeMillis()
 
         // If token is expired, then get a new one
         if (!oauthAccessToken || oauthAccessToken.isExpired()) {
@@ -44,12 +43,12 @@ class OauthTokenFactory {
 
                 oauthAccessToken = new OauthAccessToken(json["access_token"], json["token_type"], new Date((started + json["expires_in"]) * 1000))
             } catch (ResponseStatusException e) {
-	            log.error("Error creating access token | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
-				throw new PayPalException("Error creating access token.", PayPalError.createFromResponse(e.getContent()))
-	        } catch (Exception e) {
-	            log.error("Error creating access token | ${e.getClass()} | ${e.getMessage()}", e)
-				throw new PayPalException("Error creating access token.")
-	        }
+                log.error("Error creating access token | ${e.getClass()} | ${e.getContent()} | ${e.getMessage()}", e)
+                throw new PayPalException("Error creating access token.", PayPalError.createFromResponse(e.getContent()))
+            } catch (Exception e) {
+                log.error("Error creating access token | ${e.getClass()} | ${e.getMessage()}", e)
+                throw new PayPalException("Error creating access token.")
+            }
         }
 
         return oauthAccessToken

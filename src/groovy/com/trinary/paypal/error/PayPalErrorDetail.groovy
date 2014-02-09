@@ -3,28 +3,28 @@ package com.trinary.paypal.error
 class PayPalErrorDetail {
 	protected String field
 	protected String issue
-	
-	public PayPalErrorDetail() {}
-	
-	public PayPalErrorDetail(String field, String issue) {
+
+	PayPalErrorDetail() {}
+
+	PayPalErrorDetail(String field, String issue) {
 		this.field = field
 		this.issue = issue
 	}
-	
-	public PayPalErrorDetail(Map detailMap) {
+
+	PayPalErrorDetail(Map detailMap) {
 		this.field = detailMap["field"] ?: field
 		this.issue = detailMap["issue"] ?: issue
 	}
-	
-	public String getField() {
+
+	String getField() {
 		return field
 	}
-	
-	public String getIssue() {
+
+	String getIssue() {
 		return issue
 	}
-	
-	public String toString() {
+
+	String toString() {
 		return "${field}: ${issue}"
 	}
 }

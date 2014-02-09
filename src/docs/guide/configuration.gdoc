@@ -17,7 +17,7 @@ class foo {
         PayPalConfig.setClientId("CLIENT_ID")
         PayPalConfig.setSecret("SECRET")
         PayPalConfig.setSandbox(true)
-        
+
         ...
     }
 }

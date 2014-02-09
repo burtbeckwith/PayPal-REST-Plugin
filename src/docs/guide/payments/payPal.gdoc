@@ -1,6 +1,6 @@
 First let's discuss how a PayPal payment works.  There are two steps.  The first is the creation of a payment.  A payment is composed of a list of transactions and a payer with a list of funding instruments.  With a PayPal transaction this is simplified greatly, as we don't have to present a funding instrument, as PayPal is our funding instrument.  So all we have to pass it is our list of transactions.
 
-In our PaymentService we store all of our items in one transaction.  The transaction is abstracted into an interface called Orderable.  The items contained in the Orderable object are abstracted as Payable.  Your classes that represent your order and sale items can implement these interfaces. 
+In our PaymentService we store all of our items in one transaction.  The transaction is abstracted into an interface called Orderable.  The items contained in the Orderable object are abstracted as Payable.  Your classes that represent your order and sale items can implement these interfaces.
 
 Creating a payment is easy.  Simply create an instance of your order object that implements our Orderable interface and then populate it with your sale items that implement our Payable interface, and then pass it into the PaymentService as shown below.
 
@@ -19,20 +19,20 @@ class TestService {
         PayPalConfig.setClientId("ASH4ehCXBQFejoWM4-VhA1m3OveRc6Gx0Wf2fRJSTw_kc70s5CDccdnyjBaU")
         PayPalConfig.setSecret("EE13ZxA47-hbtRI7nuzdaXy407gUJtbSyCCBM4LYnJdlbFFkwW1XSPxBTUve")
         PayPalConfig.enableSandbox()
-        
+
         // Create an object that uses the Orderable interface.
         Order order = new Order(
             currency: Currency.USD,
             taxRate: 0.0825
         )
-        
+
         // Add Payable items with price, description, quantity.
         order.items.add(new OrderItem(
             price: 25.00,
             description: "Kaito Action Figure",
             quantity: 2
         ))
-        
+
         // To pay with PayPal, pass the order, the name of the controller for the redirect and
         // the actions for completing and canceling the payment.
         try {
@@ -57,16 +57,16 @@ import com.trinary.paypal.rest.PaymentResponse
 class TestController {
     TestService testService
     PaymentService paymentService
-    
+
     def testPayPal() {
         PaymentResponse paymentResponse = testService.testPayPal()
         redirect(url: paymentResponse.approvalLink)
     }
-    
+
     def cancelPayPal() {
-        
+
     }
-    
+
     def completePayPal() {
         [paymentResponse: paymentService.executePayPalPayment(params.transaction, params.PayerID)]
     }

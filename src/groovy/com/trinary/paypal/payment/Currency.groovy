@@ -5,11 +5,9 @@ enum Currency {
 
     protected String value
 
-    public Currency(String value) {
+    private Currency(String value) {
         this.value = value
     }
 
-    public String toString() {
-        return value
-    }
+    String toString() { value }
 }

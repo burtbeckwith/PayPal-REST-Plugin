@@ -6,11 +6,9 @@ enum Intent {
 
     protected String value
 
-    public Intent(String value) {
+    private Intent(String value) {
         this.value = value
     }
 
-    public String toString() {
-        return value
-    }
+    String toString() { value }
 }

@@ -2,22 +2,22 @@ package com.trinary.paypal.error
 
 class PayPalError {
 	protected String name
-	protected ArrayList<PayPalErrorDetail> details = new ArrayList<PayPalErrorDetail>()
+	protected List<PayPalErrorDetail> details = []
 	protected String message
 	protected String informationLink
 	protected String debugId
-	
-	public PayPalError() {}
-	
-	public PayPalError(String name, ArrayList<PayPalErrorDetail> details, String message, String informationLink, String debugId) {
+
+	PayPalError() {}
+
+	PayPalError(String name, List<PayPalErrorDetail> details, String message, String informationLink, String debugId) {
 		this.name = name
 		this.details = details
 		this.message = message
 		this.informationLink = informationLink
-		this.debugId = debugId	
+		this.debugId = debugId
 	}
-	
-	public static PayPalError createFromResponse(Map errorMap) {
+
+	static PayPalError createFromResponse(Map errorMap) {
 		PayPalError error = new PayPalError()
 		error.name = errorMap["name"] ?: error.name
 		errorMap["details"].each {
@@ -26,27 +26,27 @@ class PayPalError {
 		error.message = errorMap["message"] ?: error.message
 		error.informationLink = errorMap["information_link"] ?: error.informationLink
 		error.debugId = errorMap["debugId"] ?: error.debugId
-		
+
 		return error
 	}
-	
-	public String getName() {
+
+	String getName() {
 		return name
 	}
-	
-	public ArrayList<PayPalErrorDetail> getDetails() {
+
+	List<PayPalErrorDetail> getDetails() {
 		return details
 	}
-	
-	public String getMessage() {
+
+	String getMessage() {
 		return message
 	}
-	
-	public String getInformationLink() {
+
+	String getInformationLink() {
 		return informationLink
 	}
-	
-	public String getDebugId() {
+
+	String getDebugId() {
 		return debugId
 	}
 }

@@ -7,6 +7,6 @@ configuration:
 payments:
         title: Payment
         payPal:
-                title: Pay Pal Payments
+                title: PayPal Payments
         creditCard:
                 title: Credit Card Payments

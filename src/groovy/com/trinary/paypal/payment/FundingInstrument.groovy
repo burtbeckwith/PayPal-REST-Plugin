@@ -1,7 +1,5 @@
 package com.trinary.paypal.payment
 
-import java.util.Map
-
 import com.trinary.Convertable
 
 abstract class FundingInstrument implements Convertable {
@@ -11,9 +9,9 @@ abstract class FundingInstrument implements Convertable {
     protected Integer expireMonth
     protected Integer expireYear
 
-    public FundingInstrument() {}
+    FundingInstrument() {}
 
-    public FundingInstrument(String id, String payerId, CreditCardType type, Integer expireMonth, Integer expireYear) {
+    FundingInstrument(String id, String payerId, CreditCardType type, Integer expireMonth, Integer expireYear) {
         this.id = id
         this.payerId = id
         this.type = id
@@ -21,7 +19,7 @@ abstract class FundingInstrument implements Convertable {
         this.expireYear = year
     }
 
-    public FundingInstrument(Map map) {
+    FundingInstrument(Map map) {
         this.id = map["id"] ?: id
         this.payerId = map["payerId"] ?: payerId
         this.type = map["type"] ?: type

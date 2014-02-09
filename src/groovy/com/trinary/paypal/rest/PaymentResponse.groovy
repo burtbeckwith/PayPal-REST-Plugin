@@ -2,13 +2,21 @@ package com.trinary.paypal.rest
 
 import org.apache.log4j.Logger
 
-import com.budjb.requestbuilder.*
-import com.budjb.requestbuilder.httpexception.*
-import com.trinary.Convertable
-import com.trinary.paypal.*
-import com.trinary.paypal.oauth.*
-import com.trinary.paypal.payment.*
-import com.trinary.paypal.payment.payer.*
+import com.trinary.paypal.payment.Amount
+import com.trinary.paypal.payment.CreditCard
+import com.trinary.paypal.payment.CreditCardType
+import com.trinary.paypal.payment.Currency
+import com.trinary.paypal.payment.Details
+import com.trinary.paypal.payment.Intent
+import com.trinary.paypal.payment.Link
+import com.trinary.paypal.payment.Transaction
+import com.trinary.paypal.payment.payer.BillingAddress
+import com.trinary.paypal.payment.payer.CreditCardPayer
+import com.trinary.paypal.payment.payer.PayPalPayer
+import com.trinary.paypal.payment.payer.Payer
+import com.trinary.paypal.payment.payer.PayerAddressType
+import com.trinary.paypal.payment.payer.PayerInfo
+import com.trinary.paypal.payment.payer.ShippingAddress
 
 class PaymentResponse {
     protected String id
@@ -18,20 +26,20 @@ class PaymentResponse {
 
     protected Intent intent
     protected Payer payer
-    protected ArrayList<Transaction> transactions = new ArrayList<Transaction>()
-    protected ArrayList<Link> links = new ArrayList<Link>()
+    protected List<Transaction> transactions = []
+    protected List<Link> links = []
 
-    protected static Logger log = Logger.getLogger(PaymentResponse.class)
+    protected static Logger log = Logger.getLogger(this)
 
-    public PaymentResponse() {}
-	
-	public String getApprovalLink() {
-		return links.find {Link link->
-			link.rel == "approval_url"
-		}?.href
-	}
+    PaymentResponse() {}
 
-    static public PaymentResponse createFromResponse(Map responseMap) {
+    String getApprovalLink() {
+        return links.find {Link link->
+            link.rel == "approval_url"
+        }?.href
+    }
+
+    static PaymentResponse createFromResponse(Map responseMap) {
         PaymentResponse paymentResponse = new PaymentResponse()
         paymentResponse.id         = responseMap["id"]
         paymentResponse.state      = responseMap["state"]
@@ -81,31 +89,31 @@ class PaymentResponse {
                 }
             }
         } else if (responseMap["payer"]["payment_method"] == "paypal") {
-			Map payerInfo = responseMap["payer"]["payer_info"]
-			Map shipping  = payerInfo["shipping_address"]
-			
-			println "PAYER INFO " + payerInfo
-			println "SHIPPING   " + shipping
-			
+            Map payerInfo = responseMap["payer"]["payer_info"]
+            Map shipping  = payerInfo["shipping_address"]
+
+//            println "PAYER INFO " + payerInfo
+//            println "SHIPPING   " + shipping
+
             paymentResponse.payer = new PayPalPayer(
-				payerInfo: new PayerInfo([
-					email: payerInfo["email"],
-					firstName: payerInfo["first_name"],
-					lastName: payerInfo["last_name"],
-					payer_id: payerInfo["payer_id"],
-					shippingAddress: new ShippingAddress([
-						line1: shipping["line1"],
-						line2: shipping["line2"],
-						city: shipping["city"],
-						state: shipping["state"],
-						postalCode: shipping["postal_code"],
-						countryCode: shipping["country_code"],
-						phone: shipping["phone"],
-						recipientName: shipping["recipient_name"],
-						type: shipping["type"] ? PayerAddressType.valueOf(shipping["type"]?.toUpperCase()) : null
-					])
-				])
-			)
+                payerInfo: new PayerInfo([
+                    email: payerInfo["email"],
+                    firstName: payerInfo["first_name"],
+                    lastName: payerInfo["last_name"],
+                    payer_id: payerInfo["payer_id"],
+                    shippingAddress: new ShippingAddress([
+                        line1: shipping["line1"],
+                        line2: shipping["line2"],
+                        city: shipping["city"],
+                        state: shipping["state"],
+                        postalCode: shipping["postal_code"],
+                        countryCode: shipping["country_code"],
+                        phone: shipping["phone"],
+                        recipientName: shipping["recipient_name"],
+                        type: shipping["type"] ? PayerAddressType.valueOf(shipping["type"]?.toUpperCase()) : null
+                    ])
+                ])
+            )
         }
 
         // Convert transactions object back to pogo

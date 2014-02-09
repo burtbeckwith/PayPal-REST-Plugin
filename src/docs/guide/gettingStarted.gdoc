@@ -1,4 +1,4 @@
-To use the plugin you need to go create a developers account at [PayPal|http://developer.paypal.com], and a PayPal business account.  On the developers site you will be able to create as many apps as you need, as well as making test accounts.  Once you make your developers account, you will need to get your clientId and secret. 
+To use the plugin you need to go create a developers account at [PayPal|http://developer.paypal.com], and a PayPal business account.  On the developers site you will be able to create as many apps as you need, as well as making test accounts.  Once you make your developers account, you will need to get your clientId and secret.
 
 The plugin consists of POGOs that represent all PayPal's data structures and one Grails service.  The POGO's include two main classes that represent a payment request and response, a Payable and Orderable interfaces that you can implement in your own objects that will allow you to collect payment on said object, as well as a set of exceptions for each error response you can receive.
 
