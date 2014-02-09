@@ -16,5 +16,9 @@ grails.project.dependency.resolution = {
 
 	plugins {
 		compile ":jersey-request-builder:1.1.3"
+
+		build ':release:2.2.1', ':rest-client-builder:1.0.3', {
+			export = false
+		}
 	}
 }
