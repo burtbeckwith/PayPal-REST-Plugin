@@ -1,6 +1,7 @@
 package com.trinary.paypal.rest
 
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import com.budjb.requestbuilder.RequestBuilder
 import com.budjb.requestbuilder.ResponseStatusException
@@ -22,7 +23,7 @@ class PaymentRequest implements Convertable {
     protected RedirectUrls redirectUrls
     protected List<Transaction> transactions = []
 
-    protected static Logger log = Logger.getLogger(this)
+    protected static Logger log = LoggerFactory.getLogger(this)
 
     PaymentRequest() {}
 

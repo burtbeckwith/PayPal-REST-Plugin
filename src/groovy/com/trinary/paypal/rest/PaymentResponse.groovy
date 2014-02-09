@@ -1,6 +1,7 @@
 package com.trinary.paypal.rest
 
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import com.trinary.paypal.payment.Amount
 import com.trinary.paypal.payment.CreditCard
@@ -29,7 +30,7 @@ class PaymentResponse {
     protected List<Transaction> transactions = []
     protected List<Link> links = []
 
-    protected static Logger log = Logger.getLogger(this)
+    protected static Logger log = LoggerFactory.getLogger(this)
 
     PaymentResponse() {}
 
