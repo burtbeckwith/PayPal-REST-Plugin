@@ -7,7 +7,7 @@ class PayPalRESTGrailsPlugin {
 	]
 	def title = "Grails PayPal REST Plugin"
 	def description = 'Simplifies the PayPal REST API'
-	def documentation = 'http://grails.org/plugin/pay-pal-rest'
+	def documentation = 'http://grails.org/plugin/paypal-rest'
 	def license = 'APACHE'
 	def developers = [
 		[name: 'Michael C. Main', email: 'deusprogrammer@gmail.com']
